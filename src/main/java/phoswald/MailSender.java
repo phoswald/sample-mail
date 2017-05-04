@@ -23,7 +23,7 @@ public class MailSender {
     String password = "password";
     String from = "username@gmail.com";
     String to = "username@gmail.com";
-    String subject = "Test: MimeMultipart mit X-Header";
+    String subject = "Test: MIME multipart (text, html and attachments) and headers";
     String body = "Hallo\n\nDies ist ein Test von javax.mail.*\n\nBye Bye";
     String bodyHtml = "<html><body><p><b><u>Hallo</u></b><br><br>Dies ist ein Test von javax.mail.*<br><br>Bye Bye</p></body></html>";
 
@@ -51,26 +51,32 @@ public class MailSender {
     private void sendHtmlMessage() throws AddressException, MessagingException, IOException {
         Session session = createSession();
         MimeMessage message = new MimeMessage(session);
-        MimeMultipart multiPart = new MimeMultipart("alternative");
+        message.setFrom(new InternetAddress(from));
+        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+        message.setSubject(subject);
+        message.setHeader("X-FOO", "BAR");
+
+        MimeMultipart multiPart = new MimeMultipart();
+        message.setContent(multiPart);
+
+        MimeBodyPart innerPart = new MimeBodyPart();
+        multiPart.addBodyPart(innerPart);
+        MimeMultipart multiPartInner = new MimeMultipart("alternative");
+        innerPart.setContent(multiPartInner);
 
         MimeBodyPart textPart = new MimeBodyPart();
         textPart.setText(body, "utf-8");
-        multiPart.addBodyPart(textPart);
+        multiPartInner.addBodyPart(textPart);
 
         MimeBodyPart htmlPart = new MimeBodyPart();
         htmlPart.setContent(bodyHtml, "text/html; charset=utf-8");
-        multiPart.addBodyPart(htmlPart);
+        multiPartInner.addBodyPart(htmlPart);
 
         MimeBodyPart attachmentPart = new MimeBodyPart();
         attachmentPart.setDataHandler(new DataHandler(new FileDataSource("src/main/resources/p16252.jpg")));
         attachmentPart.setFileName("ich.jpeg");
         multiPart.addBodyPart(attachmentPart);
 
-        message.setFrom(new InternetAddress(from));
-        message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-        message.setSubject(subject);
-        message.setContent(multiPart);
-        message.setHeader("X-FOO", "BAR");
         System.out.println("Sending..");
         Transport.send(message);
         System.out.println("Sent.");
