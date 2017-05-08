@@ -8,13 +8,13 @@
     <relativePath />
   </parent>
 
-  <artifactId>test-mail</artifactId>
+  <artifactId>sample-mail</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>${artifactId}</name>
-  <description>${artifactId}</description>
-  <url>https://github.com/phoswald/${artifactId}</url>
+  <name>${project.artifactId}</name>
+  <description>Experiments with javax.mail</description>
+  <url>https://github.com/phoswald/${project.artifactId}</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -36,6 +36,7 @@
   </dependencies>
 
   <build>
+    <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -45,13 +46,30 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>2.10</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeScope>runtime</includeScope>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
   <scm>
-    <connection>scm:git:https://github.com/phoswald/${artifactId}.git</connection>
-    <developerConnection>scm:git:https://github.com/phoswald/${artifactId}.git</developerConnection>
-    <url>https://github.com/phoswald/${artifactId}/tree/master</url>
+    <connection>scm:git:https://github.com/phoswald/${project.artifactId}.git</connection>
+    <developerConnection>scm:git:https://github.com/phoswald/${project.artifactId}.git</developerConnection>
+    <url>https://github.com/phoswald/${project.artifactId}/tree/master</url>
     <tag>HEAD</tag>
   </scm>
 
