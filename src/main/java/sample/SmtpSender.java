@@ -17,7 +17,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-public class MailSender {
+public class SmtpSender {
 
     String username = "username@gmail.com";
     String password = "password";
@@ -28,7 +28,7 @@ public class MailSender {
     String bodyHtml = "<html><body><p><b><u>Hallo</u></b><br><br>Dies ist ein Test von javax.mail.*<br><br>Bye Bye</p></body></html>";
 
     public static void main(String[] args) throws Exception {
-        MailSender instance = new MailSender();
+        SmtpSender instance = new SmtpSender();
         instance.username = args[0];
         instance.password = args[1];
         instance.from = args[2];
